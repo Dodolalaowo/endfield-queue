@@ -1,5 +1,5 @@
 {
-  "testedAt": "2026-09-15T07:49:07.424Z",
+  "testedAt": "2026-09-15T10:18:23.313Z",
   "engine": "Chromium desktop + viewport/touch emulation; not physical iPhone",
   "passed": [
     "layout 320x568: fonts, images, leading zero, no horizontal overflow, reduced motion",

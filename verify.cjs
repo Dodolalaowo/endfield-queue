@@ -43,8 +43,8 @@ const out=path.join(__dirname,'verification');fs.mkdirSync(out,{recursive:true})
   {
    const {page,errors}=await open({viewport:{width:390,height:844},isMobile:true,hasTouch:true},'?character=female');
    await page.waitForFunction(()=>Number(document.querySelector('.character-layer[data-character=female]').dataset.frames)>5);
-   await page.screenshot({path:path.join(out,'animated-mobile.png'),fullPage:true});assert.deepEqual(errors,[]);
-   await page.emulateMedia({reducedMotion:'reduce'});assert(await page.locator('video').evaluate(v=>v.paused));assert.equal(await page.locator('.has-video').count(),0);await page.close();passed.push('mobile animation, runtime reduced-motion fallback');
+   assert.equal(await page.locator('.canvas').evaluate(e=>e.classList.contains('mobile')),true);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth),false);await page.screenshot({path:path.join(out,'animated-mobile.png'),fullPage:true});assert.deepEqual(errors,[]);
+   await page.emulateMedia({reducedMotion:'reduce'});await page.waitForFunction(()=>[...document.querySelectorAll('video')].every(v=>v.paused));assert(await page.locator('video').evaluate(v=>v.paused));assert.equal(await page.locator('.has-video').count(),0);await page.close();passed.push('mobile animation, runtime reduced-motion fallback');
   }
   {
    const page=await browser.newPage({viewport:{width:360,height:640}});await page.route('**/*.mp4',r=>r.abort());await page.goto(origin+'/?character=male');
@@ -54,4 +54,6 @@ const out=path.join(__dirname,'verification');fs.mkdirSync(out,{recursive:true})
   fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({testedAt:new Date().toISOString(),engine:'Chromium desktop + viewport/touch emulation; not physical iPhone',passed},null,2));console.log(passed.join('\n'));
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1});
+
+
 

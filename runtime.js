@@ -26,15 +26,16 @@
  function optical(){fitText('.number',580,228);fitText('.day-label',86,28);fitText('.day-value',108,90);}
  // Preserve the template's two canvases, but let a long notice extend the page.
  function layout(){
-  const mobile=params.get('view')==='mobile'||(params.get('view')!=='tv'&&innerWidth<config.layout.breakpoint);
+  const viewportWidth=document.documentElement.clientWidth,viewportHeight=document.documentElement.clientHeight;
+  const mobile=params.get('view')==='mobile'||(params.get('view')!=='tv'&&viewportWidth<config.layout.breakpoint);
   stage.classList.toggle('mobile',mobile);
   const notice=document.querySelector('.notice');
   const width=mobile?360:1920,height=Math.max(mobile?640:1080,notice.offsetTop+notice.offsetHeight+(mobile?15:48));
   stage.style.height=`${height}px`;
-  const scale=mobile?Math.min(innerWidth/width,config.layout.mobileMaxScale):Math.min(innerWidth/width,innerHeight/height);
-  stage.style.transform=`scale(${scale})`;stage.style.left=`${Math.max(0,(innerWidth-width*scale)/2)}px`;
-  stage.style.top=`${mobile?0:Math.max(0,(innerHeight-height*scale)/2)}px`;
-  document.body.style.minHeight=`${Math.max(innerHeight,height*scale)}px`;
+  const scale=mobile?Math.min(viewportWidth/width,config.layout.mobileMaxScale):Math.min(viewportWidth/width,viewportHeight/height);
+  stage.style.transform=`scale(${scale})`;stage.style.left=`${Math.max(0,(viewportWidth-width*scale)/2)}px`;
+  stage.style.top=`${mobile?0:Math.max(0,(viewportHeight-height*scale)/2)}px`;
+  document.body.style.minHeight=`${Math.max(viewportHeight,height*scale)}px`;
  }
  function motionAllowed(){return config.motion.enabled!==false&&params.get('motion')!=='off'&&!reduced.matches;}
  function makePlayer(layer){
@@ -90,3 +91,4 @@
  reduced.addEventListener('change',resetMotion);document.addEventListener('visibilitychange',resetMotion);addEventListener('pagehide',()=>{clearTimeout(timer);clearTimeout(fadeTimer);frames.forEach(p=>p?.stop());});addEventListener('pageshow',resetMotion);
  resetMotion();
 })();
+
