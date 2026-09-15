@@ -1,0 +1,20 @@
+{
+  "testedAt": "2026-09-15T07:49:07.424Z",
+  "engine": "Chromium desktop + viewport/touch emulation; not physical iPhone",
+  "passed": [
+    "layout 320x568: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 360x640: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 390x844: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 768x1024: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 899x900: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 900x900: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 1366x768: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "layout 1920x1080: fonts, images, leading zero, no horizontal overflow, reduced motion",
+    "forced mobile",
+    "forced tv",
+    "DAY 12, 0009, long notice extends canvas",
+    "3D frames advance, male/female transition, outgoing decoder pauses",
+    "mobile animation, runtime reduced-motion fallback",
+    "blocked video preserves static character"
+  ]
+}
