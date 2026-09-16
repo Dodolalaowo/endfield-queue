@@ -1,0 +1,24 @@
+{
+  "testedAt": "2026-09-16T02:07:56.529Z",
+  "origin": "http://127.0.0.1:8090",
+  "engine": "Windows Edge; touch and visibility simulation, no physical phone",
+  "passed": [
+    "layout 320: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 360: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 390: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 768: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 899: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 900: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 1366: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "layout 1920: breakpoint, fonts, DAY center, leading zero, no overflow",
+    "mobile perlica: V6 static screenshot",
+    "mobile amiya: V6 static screenshot",
+    "tv perlica: V6 static screenshot",
+    "tv amiya: V6 static screenshot",
+    "DAY12, 0009 and long notice",
+    "full rotation: Perlica playback, Amiya drift, single paused decoder, return playback",
+    "touch viewport: mobile media, simulated visibility resume, runtime reduced motion",
+    "missing video: one retry then visible poster",
+    "missing Amiya artwork: keep complete Perlica scene"
+  ]
+}

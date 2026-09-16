@@ -3,10 +3,11 @@
  const config=window.QUEUE_CONTENT, stage=document.querySelector('.canvas');
  const params=new URLSearchParams(location.search), reduced=matchMedia('(prefers-reduced-motion: reduce)');
  const layers=[...document.querySelectorAll('.character-layer')];
- const fixed=['male','female'].includes(params.get('character'))?params.get('character'):null;
- let current=fixed==='female'?1:0, timer=0, fadeTimer=0;
- const frames=new Map();
- const fields={event:'.event',headerNote:'.header-note',title:'.title',label:'.label',dayLabel:'.day-label text',day:'.day-value text',number:'.number text',status:'.status span',noticeTag:'.notice-tag',noticeMain:'.notice-main',noticeSub:'.notice-sub'};
+ const requested=({male:'perlica',female:'amiya'})[params.get('character')]||params.get('character');
+ const fixed=['perlica','amiya'].includes(requested)?requested:null;
+ let current=fixed==='amiya'?1:0, timer=0, fadeTimer=0;
+ let perlicaPlayer; const decodedImages=new WeakSet();
+ const fields={headerNote:'.header-note',title:'.title',label:'.label',dayLabel:'.day-label text',day:'.day-value text',number:'.number text',status:'.status span',noticeTag:'.notice-tag',noticeMain:'.notice-main',noticeSub:'.notice-sub'};
  function renderContent(){
   for(const [key,selector] of Object.entries(fields))document.querySelector(selector).textContent=String(config[key]??'');
   document.querySelector('.updated').textContent=`更新時間 ${config.updatedAt}`;
@@ -38,57 +39,48 @@
   document.body.style.minHeight=`${Math.max(viewportHeight,height*scale)}px`;
  }
  function motionAllowed(){return config.motion.enabled!==false&&params.get('motion')!=='off'&&!reduced.matches;}
- function makePlayer(layer){
-  const canvas=layer.querySelector('canvas');
-  const gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false,preserveDrawingBuffer:true});
-  if(!gl){layer.dataset.videoState='poster';return null;}
-  const shader=(kind,source)=>{const s=gl.createShader(kind);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('Shader unavailable');return s;};
-  let video,program;
-  try{
-   program=gl.createProgram();
-   gl.attachShader(program,shader(gl.VERTEX_SHADER,'attribute vec2 p; varying vec2 uv; void main(){ uv=vec2((p.x+1.0)*0.5,(1.0-p.y)*0.5);gl_Position=vec4(p,0.0,1.0); }'));
-   gl.attachShader(program,shader(gl.FRAGMENT_SHADER,'precision mediump float; varying vec2 uv; uniform sampler2D frame; void main(){vec3 c=texture2D(frame,vec2(uv.x*0.5,uv.y)).rgb;float a=texture2D(frame,vec2(0.5+uv.x*0.5,uv.y)).r;gl_FragColor=vec4(c*a,a);}'));
-   gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Video compositor unavailable');gl.useProgram(program);
-   const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-   const pos=gl.getAttribLocation(program,'p');gl.enableVertexAttribArray(pos);gl.vertexAttribPointer(pos,2,gl.FLOAT,false,0,0);
-   const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-   video=document.createElement('video');video.muted=true;video.defaultMuted=true;video.loop=true;video.playsInline=true;video.preload='metadata';video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');video.style.display='none';video.src=config.assets[layer.dataset.character];layer.append(video);
-  }catch{layer.dataset.videoState='poster';return null;}
-  let running=false,request=0,last=0,count=0,broken=false;
-  function schedule(){if(!running)return;request=video.requestVideoFrameCallback?video.requestVideoFrameCallback(draw):requestAnimationFrame(draw);}
-  function stop(){running=false;video.pause();if(video.cancelVideoFrameCallback)video.cancelVideoFrameCallback(request);else cancelAnimationFrame(request);}
-  function fail(){broken=true;stop();layer.classList.remove('has-video');layer.dataset.videoState='poster';}
-  function draw(time){
-   if(!running)return;
-   if(video.readyState>=2&&time-last>=(stage.classList.contains('mobile')?48:28)){
-    try{gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);layer.classList.add('has-video');layer.dataset.videoState='playing';layer.dataset.frames=String(++count);last=time;}catch{fail();return;}
-   }schedule();
-  }
-  async function start(){if(broken||running)return;running=true;try{await video.play();if(running)schedule();else video.pause();}catch{fail();}}
-  canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();fail();});video.addEventListener('error',fail);
-  return{start,stop};
+ function player(){
+  if(!perlicaPlayer){
+   const mobile=stage.classList.contains('mobile'),canvas=layers[0].querySelector('canvas');
+   canvas.width=mobile?640:960;canvas.height=mobile?360:540;
+   perlicaPlayer=createQueueVideoPlayer(layers[0],{src:config.assets.perlica[mobile?'mobile':'desktop'],fallbackSrc:config.assets.perlica.mobile});
+  }return perlicaPlayer;
  }
- function player(index){if(!frames.has(index))frames.set(index,makePlayer(layers[index]));return frames.get(index);}
- function display(index){layers.forEach((layer,i)=>layer.classList.toggle('is-active',i===index));stage.dataset.character=layers[index].dataset.character;}
+ function ready(index){return [...layers[index].querySelectorAll('img'),...(index===1?[document.querySelector('.amiya-scene img')]:[])].every(img=>decodedImages.has(img));}
+ function display(index){
+  layers.forEach((layer,i)=>layer.classList.toggle('is-active',i===index));stage.dataset.character=layers[index].dataset.character;
+  stage.classList.toggle('amiya',index===1);stage.classList.toggle('perlica',index===0);
+  document.querySelector('.operator-name').textContent=index===1?'[ 阿米婭 ]':'[ 佩麗卡 ]';
+  document.querySelector('.operator-en').textContent=index===1?'AMIYA / RHODES ISLAND':'PERLICA / ENDFIELD';
+ }
  function resetMotion(){
-  clearTimeout(timer);clearTimeout(fadeTimer);for(const p of frames.values())p?.stop();
+  clearTimeout(timer);clearTimeout(fadeTimer);perlicaPlayer?.stop();
   const allowed=motionAllowed()&&!document.hidden;
-  stage.classList.toggle('motion-off',!allowed);stage.classList.toggle('background-off',config.motion.background===false);
-  if(!allowed||config.motion.characters===false){layers.forEach(l=>l.classList.remove('has-video'));display(current);return;}
-  display(current);player(current)?.start();if(!fixed)timer=setTimeout(rotate,Math.max(3000,config.motion.intervalMs||12000));
+  stage.classList.toggle('motion-off',!allowed);stage.classList.toggle('background-off',config.motion.background===false);stage.classList.toggle('characters-off',config.motion.characters===false);
+  display(current);
+  if(!allowed||config.motion.characters===false)return;
+  if(current===0)player().start();
+  if(!fixed)timer=setTimeout(rotate,Math.max(3000,config.motion.intervalMs||12000));
  }
  function rotate(){
-  if(!motionAllowed()||document.hidden)return;
-  const old=current;current=1-current;player(current)?.start();display(current);
-  fadeTimer=setTimeout(()=>frames.get(old)?.stop(),config.motion.fadeMs||850);
+  if(!motionAllowed()||document.hidden||config.motion.characters===false)return;
+  const next=1-current;
+  // A failed or still-loading image never replaces a complete scene with blank space.
+  if(ready(next)){
+   current=next;if(current===0)player().start();display(current);
+   if(current===1)fadeTimer=setTimeout(()=>perlicaPlayer?.stop(),config.motion.fadeMs||850);
+  }
   timer=setTimeout(rotate,Math.max(3000,config.motion.intervalMs||12000));
  }
  layers.forEach(l=>l.style.transitionDuration=`${config.motion.fadeMs||850}ms`);
+ // Decode both artwork scenes ahead of rotation, independently of the large CJK font.
+ document.querySelectorAll('.character-poster,.amiya-scene img').forEach(img=>{if(img.decode)img.decode().then(()=>decodedImages.add(img)).catch(()=>{});else if(img.complete&&img.naturalWidth)decodedImages.add(img);else img.addEventListener('load',()=>decodedImages.add(img),{once:true});});
  renderContent();layout();optical();display(current);
  document.fonts.ready.then(()=>{optical();layout();stage.dataset.fontsReady='true';});
  document.fonts.addEventListener('loadingdone',()=>{optical();layout();});
  addEventListener('resize',layout);new ResizeObserver(layout).observe(document.querySelector('.notice'));
- reduced.addEventListener('change',resetMotion);document.addEventListener('visibilitychange',resetMotion);addEventListener('pagehide',()=>{clearTimeout(timer);clearTimeout(fadeTimer);frames.forEach(p=>p?.stop());});addEventListener('pageshow',resetMotion);
+ reduced.addEventListener('change',resetMotion);document.addEventListener('visibilitychange',resetMotion);
+ addEventListener('pagehide',()=>{clearTimeout(timer);clearTimeout(fadeTimer);perlicaPlayer?.stop();});addEventListener('pageshow',resetMotion);
  resetMotion();
 })();
 

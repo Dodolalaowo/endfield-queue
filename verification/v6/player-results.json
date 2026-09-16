@@ -1,0 +1,109 @@
+{
+  "date": "2026-09-16T02:12:03.023Z",
+  "engine": "Windows Edge Chromium; touch emulation is not physical mobile",
+  "results": [
+    {
+      "name": "desktop cold playback",
+      "pass": true,
+      "state": {
+        "videoState": "playing",
+        "videoReason": "",
+        "frames": "163",
+        "mediaTime": "1.751",
+        "firstFrameMs": "211"
+      }
+    },
+    {
+      "name": "mobile cold playback",
+      "pass": true,
+      "state": {
+        "videoState": "playing",
+        "videoReason": "",
+        "frames": "158",
+        "mediaTime": "1.507",
+        "firstFrameMs": "76"
+      }
+    },
+    {
+      "name": "slow cold network",
+      "pass": true,
+      "state": {
+        "videoState": "playing",
+        "videoReason": "",
+        "frames": "155",
+        "mediaTime": "1.279",
+        "firstFrameMs": "1863"
+      }
+    },
+    {
+      "name": "autoplay denied",
+      "pass": true,
+      "state": {
+        "videoState": "fallback",
+        "videoReason": "autoplay-rejected"
+      }
+    },
+    {
+      "name": "missing media bounded retry",
+      "pass": true,
+      "state": {
+        "videoState": "fallback",
+        "videoReason": "media-error",
+        "retries": "1"
+      }
+    },
+    {
+      "name": "pending first frame timeout",
+      "pass": true,
+      "state": {
+        "videoState": "fallback",
+        "videoReason": "first-frame-timeout",
+        "frames": "2",
+        "mediaTime": "0.000",
+        "retries": "1"
+      }
+    },
+    {
+      "name": "stalled decoder recovery then fallback",
+      "pass": true,
+      "state": {
+        "videoState": "fallback",
+        "videoReason": "first-frame-timeout",
+        "frames": "4",
+        "mediaTime": "0.000",
+        "firstFrameMs": "70",
+        "retries": "1"
+      }
+    },
+    {
+      "name": "WebGL unavailable poster",
+      "pass": true,
+      "state": {
+        "videoState": "fallback",
+        "videoReason": "webgl-unavailable"
+      }
+    },
+    {
+      "name": "context lost poster",
+      "pass": true,
+      "state": {
+        "videoState": "fallback",
+        "videoReason": "context-lost",
+        "frames": "2",
+        "mediaTime": "0.054",
+        "firstFrameMs": "77"
+      }
+    },
+    {
+      "name": "resume and 60 second loops",
+      "pass": true,
+      "state": {
+        "videoState": "playing",
+        "videoReason": "",
+        "frames": "1219",
+        "mediaTime": "0.669",
+        "firstFrameMs": "94"
+      }
+    }
+  ]
+}

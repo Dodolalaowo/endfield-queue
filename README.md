@@ -1,87 +1,60 @@
-# 明日方舟：終末地｜GRYPHLINE STORE 叫號網站
+# 明日方舟 × 終末地｜GRYPHLINE STORE
 
-版本：v1.0.3，2026-09-15。
+版本 v2.0.0，2026-09-16。已確認 V6 構圖正式實作，佩麗卡播放與失敗備援已做 Windows Edge 測試。
 
-依已確認的配置提案 04 製作。先複製星布谷地 v1.3，再替換內容、樣式與動畫；原始兩套模板保留。57 個原始模板檔案與交接包 MANIFEST 的 SHA256 相符。
-
-## 線上預覽
+## 預覽
 
 - 自適應：https://dodolalaowo.github.io/endfield-queue/
 - 電腦：https://dodolalaowo.github.io/endfield-queue/?view=tv
 - 手機：https://dodolalaowo.github.io/endfield-queue/?view=mobile
+- 固定佩麗卡：加 `character=perlica`；固定阿米婭：加 `character=amiya`。
+- `motion=off` 關閉動態；參數以 `&` 組合。舊 male / female 分別對應 perlica / amiya。
 
-## 開啟
+## 已確認設計
 
-在本資料夾執行：
+維持單一900px斷點：小於900手機360px基準，其他電腦1920px基準。雙 Logo 終末地左、明日方舟右，手機說明靠右。DAY與039四角框中心對齊。
+
+佩麗卡以官方3D影片半身呈現；阿米婭為彩色前景偏右下、27%後景頭肩偏左上，後景四周漸隱、白底、淡RHODES ISLAND字，沒有黑色色塊。前後景6.5秒單程反向微移，桌機14/20px、手機5/7px。每12秒輪替一次，0.85秒淡入淡出。號碼及公告不跟著移動。
+
+## 播放可靠性
+
+官方佩麗卡原片3840×1080約4.9MB，另製作桌機283KB／手機227KB的H.264無音軌版本。保留原片與透明遮罩。首屏先顯示彩色靜態圖，兩格不同媒體時間成功合成後才顯示影片。
+
+首格逾時10秒或播放中4秒無新格會退回靜態，最多重試一次；自動播放拒絕、WebGL不可用或context lost直接備援。背景分頁、離場及減少動態停止解碼。阿米婭用圖片，不建立第二個video；圖片decode失敗時保留現有完整角色。
+
+使用者首次開啟卡住的設備尚未確認，不能把本機成功等同全部設備修復。iPhone Safari、Android Chrome及實際鎖屏尚未測試。詳見 [驗證紀錄](verification/v6/VALIDATION.md)。
+
+## 本機使用與修改
 
 ```sh
-node serve.cjs 8080
+node serve.cjs 8090
 ```
 
-開啟 http://127.0.0.1:8080/ 。這是本機预覽，不是外部公開網址。
+開啟 http://127.0.0.1:8090/ 。請使用 HTTP，file:// 可能限制影片合成。
 
-請以 HTTP 開啟以驗證影片透明合成；直接雙擊 index.html 的 file URL 可能因瀏覽器本機檔案限制降為靜態角色。
+- `content.js`：活動、DAY、號碼、公告、輪替及素材設定。號碼保持字串，例如 `'039'`。
+- `ui.css`：叫號面板、字型與兩版基礎配置。
+- `v6.css`：V6雙Logo、人物構圖與邊緣淡化。
+- `runtime.js`：內容、縮放、光學置中、角色及頁面生命週期。
+- `video-player.js`：佩麗卡透明影片合成與有上限的恢復流程。
+- `assets/`：官方原素材、播放用版本、完整字型與授權。
+- `handoff-v6/`：當時核准的靜態示意與重建腳本；正式網站已完成移植。
+- `verification/v6/`：正式頁截圖與驗證結果。舊 verification 根目錄圖片屬v1歷史。
 
-## 內容與設定
+目前仍是展示前端，號碼／時間為設定值，尚未串接叫號後台。
 
-修改 `content.js`：活動名稱、區名、號碼、DAY、狀態、更新時間、公告與動態設定。`number: '039'` 必須保留字串；不會自動加號或更新時間。
+## 驗證
 
-目前為展示前端，未串接即時叫號／現場後台。所有時間及號碼均為設定值。
+需 Node.js、Playwright、Edge。
 
-| 設定 | 功能 |
-|---|---|
-| motion.enabled | 開關全部動態 |
-| motion.characters | 開關角色待機與輪替 |
-| motion.background | 開關背景及局部框線動態 |
-| motion.intervalMs | 男女輪替間隔，預設12000毫秒 |
-| motion.fadeMs | 人物淡入淡出時間，預設850毫秒 |
+```sh
+node verify.cjs
+node verification/check-player.cjs
+node verification/render-v6.cjs
+```
 
-預覽參數：`?view=mobile` 強制手機、`?view=tv` 強制電視、`?motion=off` 關閉全部動態、`?character=male` 或 `?character=female` 固定單一角色（仍保留待機動作）。可用 `&` 組合。
+`PREVIEW_URL` 可切換正式頁驗證網址，播放器故障注入測試固定使用本機8090。包含320–1920px、899/900邊界、DAY置中、長公告、冷載入、慢網路、實際畫面變化、輪替、停格／拒絕／WebGL失敗備援與60秒循環。完整結果及實機限制見驗證紀錄。
 
-## 配置與動態
+## 接手
 
-- 手機360 × 640與電腦1920 × 1080為基準。小於900px採手機；手機最大縮放1.6，短螢幕可捲動，長公告會延伸畫布。
-- PC DAY 的黃底高度對齊039可見字高；字型載入後以 Canvas 字形度量計算號碼及DAY文字的光學位置。
-- 手機依序為品牌、區名與大號碼、半身人物、公告。
-- 角色採官網原始3D待機影片，以WebGL將左側RGB畫面與右側透明度遮罩合成，輸出960 × 540透明畫布；外層維持提案的半身裁切與下緣透明漸層。
-- 男女每12秒輪替，約0.85秒淡入淡出。切換後暫停離場角色的影片，背景分頁停止影片。
-- 系統「減少動態」、手動關閉動態時顯示靜態原始畫格；WebGL、影片或自動播放失敗時亦保留靜態圖。
-- 背景僅有慢速斜格、淡地形線位移及局部短黃線。號碼與公告不閃爍。
-
-## 檔案
-
-- index.html：唯一網站入口。
-- content.js：內容與設定。
-- ui.css：已核准布局、字型、動態樣式。
-- runtime.js：縮放、字形置中、影片合成與輪替。
-- assets：官方人物、Logo、完整字型、原始字型與授權。
-- serve.cjs：零套件本機HTTP伺服器。
-- verify.cjs：自動化驗證；需Node.js、Playwright與可用Chromium／Edge。
-- verification：測試紀錄及截圖。
-
-## 驗證結果與限制
-
-已使用 Edge Chromium 與內建瀏覽器驗證：
-
-- 320、360、390、768、899、900、1366及1920px；無水平溢出，圖像與字型正常。
-- 手機／電視強制切換、前導零039／0009、DAY12、長公告不被畫布截斷。
-- 官方3D畫格持續更新、男女輪替、離場影片暫停。
-- 手機觸控視窗模擬的播放、動態中切換減少動態、影片載入失敗備援。
-- `?motion=off` 停止CSS偽元素動畫且不載入影片。
-
-尚未進行 iPhone／Android 實機及Safari驗證；手機模擬不能替代實機測試。
-
-測試：安裝Playwright後啟動預覽，再執行 `node verify.cjs`。如使用系統Edge，在PowerShell設定 `$env:BROWSER_CHANNEL='msedge'`。完整通過項目見 verification/results.json。
-
-資產来源與字型授權見 SOURCES.md。
-
-### v1.0.1 手機人物平衡
-手機男角下移7px、女角上移7px；影片與靜態備援同步調整，PC維持原位。
-
-### v1.0.2 數字框置中
-PC與手機的DAY黃底、號碼均對齊四角定位框中心，上下留白已量測確認。保留手機角色7px平衡修正。
-
-
-### v1.0.3 手機視窗判定
-維持單一900px斷點及原有兩套配置，改用根元素clientWidth/clientHeight判定視窗，避免手機初始畫布溢出造成innerWidth膨脹、誤用電腦版。觸控模擬增加手機配置與水平溢出檢查。
-
+先讀 HANDOFF.md、此文件、SOURCES.md，再讀 verification/v6/VALIDATION.md。以GitHub main最新版為準，修改後測試再推送，Pages自動重新部署。原始模板與已確認示意保留。

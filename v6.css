@@ -1,0 +1,33 @@
+/* Approved V6 composition, consolidated from handoff-v6/proposal.css. */
+.brand-pair{position:absolute;left:6px;top:26px;height:100px;display:flex;align-items:center;gap:32px}
+.brand-endfield{width:85px;height:94px;object-fit:contain}.brand-divider{height:61px;width:2px;background:#aeb3a4}
+.brand-arknights{width:148px;height:72px;object-fit:contain}
+.character-caption{z-index:2;top:180px;left:67px}
+.character-stage{top:180px;height:716px}
+.character-layer[data-character=perlica] .character-poster,.character-layer[data-character=perlica] .character-video{width:2200px;height:1237.5px;left:-685px;top:-90px}
+.character-layer[data-character=amiya] .character-poster{width:1650px;height:1650px;left:-425px;top:-24px}
+.character-video,.character-poster{transition:opacity 250ms ease}
+.video-decoder{position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:.001;pointer-events:none}
+.amiya-scene{position:absolute;left:40px;top:230px;width:790px;height:666px;overflow:hidden;pointer-events:none;opacity:0;transition:opacity 850ms ease-in-out;background:none;mask-image:linear-gradient(to right,transparent,#000 12%,#000 85%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 85%,transparent)}
+.amiya .amiya-scene{opacity:1}
+.amiya-scene img{position:absolute;width:1900px;height:auto;max-width:none;left:-690px;top:-435px;opacity:.27;mask-image:linear-gradient(to bottom,transparent 435px,#000 525px,#000 650px,transparent 820px);-webkit-mask-image:linear-gradient(to bottom,transparent 435px,#000 525px,#000 650px,transparent 820px)}
+.amiya-scene span{position:absolute;top:335px;left:18px;font:900 116px/1 QueueDigits,sans-serif;color:#1517190d;white-space:nowrap;letter-spacing:-5px}
+.amiya .yellow-band{height:152px}.amiya .background-word,.amiya .background-rule,.amiya .dot-grid{opacity:0}
+.character-layer[data-character=amiya] .character-poster{animation:amiya-front 6.5s ease-in-out infinite alternate;animation-play-state:paused}
+.amiya-scene img{animation:amiya-back 6.5s ease-in-out infinite alternate;animation-play-state:paused}
+.amiya:not(.characters-off) .character-layer[data-character=amiya] .character-poster,.amiya:not(.characters-off) .amiya-scene img{animation-play-state:running}
+.mobile .header{height:90px}.mobile .brand-pair{left:0;top:9px;height:53px;gap:14px}
+.mobile .brand-endfield{width:46px;height:50px}.mobile .brand-divider{height:32px;width:1px}.mobile .brand-arknights{width:80px;height:38px}
+.mobile .header-note{left:auto;right:13px;top:44px;width:auto;text-align:right;font-size:11px;line-height:16px;letter-spacing:.5px}.mobile .header-accent{width:5px;height:27px;right:0;top:24px}
+.mobile .queue{top:105px}.mobile .yellow-band{top:90px;height:519px}
+.mobile .character-stage{left:1px;top:316px;width:359px;height:293px;z-index:1;mask-image:linear-gradient(#000 80%,transparent);-webkit-mask-image:linear-gradient(#000 80%,transparent)}
+.mobile .character-layer[data-character=perlica] .character-poster,.mobile .character-layer[data-character=perlica] .character-video{width:880px;height:495px;left:-260px;top:-16px}
+.mobile .character-layer[data-character=amiya] .character-poster{width:570px;height:570px;left:-108px;top:2px}
+.mobile .background-word{top:470px}.mobile .background-rule{top:530px}.mobile .dot-grid{top:380px}.mobile .notice{top:609px;z-index:2}
+.mobile.amiya .yellow-band{display:none}
+.mobile .amiya-scene{left:16px;top:354px;width:328px;height:255px}
+.mobile .amiya-scene img{width:800px;left:-300px;top:-212px;mask-image:linear-gradient(to bottom,transparent 212px,#000 248px,#000 285px,transparent 365px);-webkit-mask-image:linear-gradient(to bottom,transparent 212px,#000 248px,#000 285px,transparent 365px)}
+.mobile .amiya-scene span{font-size:48px;top:150px;left:4px;letter-spacing:-2px}
+.mobile{--front-drift:5px;--back-drift:-7px}
+@keyframes amiya-front{to{transform:translateX(var(--front-drift,14px))}}@keyframes amiya-back{to{transform:translateX(var(--back-drift,-20px))}}
+.motion-off .amiya-scene,.motion-off .character-video,.motion-off .character-poster{transition:none}

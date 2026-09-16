@@ -1,0 +1,6 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+body{margin:0;background:#f4ff00}.character-layer{position:relative;width:min(100vw,960px);aspect-ratio:16/9}.character-poster,.character-video{position:absolute;width:100%;height:100%;inset:0}.character-video{opacity:0}.has-video .character-video{opacity:1}.has-video .character-poster{opacity:0}.video-decoder{position:fixed;width:1px;height:1px;left:0;bottom:0;opacity:.001;pointer-events:none}
+</style></head><body><div class="character-layer"><img class="character-poster" src="../assets/perlica-poster.png"><canvas class="character-video" width="960" height="540"></canvas></div><script src="../video-player.js"></script><script>
+const mobile=document.documentElement.clientWidth<900;
+window.player=createQueueVideoPlayer(document.querySelector('.character-layer'),{src:'../assets/perlica-'+(mobile?'mobile':'desktop')+'.mp4',fallbackSrc:'../assets/perlica-mobile.mp4'});player.start();document.addEventListener('visibilitychange',()=>document.hidden?player.stop():player.start());
+</script></body></html>

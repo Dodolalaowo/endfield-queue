@@ -1,2 +1,6 @@
 node_modules/
 *.log
+
+reference-assets/
+verification/v6/reference-*.jpg
+
