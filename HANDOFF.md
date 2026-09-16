@@ -61,12 +61,10 @@ GitHub `handoff-v6/previews/` 的 SVG 包裝 JPEG 是方便預覽的示意圖，
 
 1. 下載此 GitHub 倉庫，先讀本檔、README.md、SOURCES.md。
 2. 如無本機交接 ZIP，可執行 `powershell -ExecutionPolicy Bypass -File handoff-v6/restore.ps1`，重建示意稿資料夾與官方素材（需 Node.js、npm、網路、Edge）。
-3. 執行 
-ode preview.cjs 8080`。
+3. 執行 `node preview.cjs 8080`。
 4. 靜態示意：`http://127.0.0.1:8080/mockups/proposal.html?motion=off&character=female&view=mobile`。
 5. 微動態：在上述網址加 `&demo=on`。這個 demo 獨立於原站 motion 開關；不要直接照搬正式網站。
-6. 執行 
-ode mockups/render.cjs` 可重製四張 PNG。
+6. 執行 `node mockups/render.cjs` 可重製四張 PNG。
 
 ## 下一段：正式實作及素材效能
 

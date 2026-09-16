@@ -60,4 +60,4 @@ node verification/render-v6.cjs
 先讀 HANDOFF.md、此文件、SOURCES.md，再讀 verification/v6/VALIDATION.md。以GitHub main最新版為準，修改後測試再推送，Pages自動重新部署。原始模板與已確認示意保留。
 
 ## v2.1.0 畫質提升
-兩版人物像素量較v2.0皆增加2.25倍，恢復30fps與原片完整3.10秒，降低壓縮。WebGL畫布同步提升解析度與合成上限30fps，版型、阿米婭及備援邏輯保留。驗證資料見 verification/hq/。
+兩版人物像素量較v2.0皆提升至2.25倍，恢復30fps與原片完整3.10秒，降低壓縮。WebGL畫布同步提升解析度與合成上限30fps，版型、阿米婭及備援邏輯保留。驗證資料見 verification/hq/。

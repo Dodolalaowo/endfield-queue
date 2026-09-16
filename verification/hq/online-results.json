@@ -1,0 +1,87 @@
+{
+  "date": "2026-09-16T05:49:51.165Z",
+  "origin": "https://dodolalaowo.github.io/endfield-queue",
+  "engine": "Windows Edge, touch simulation; not physical mobile",
+  "results": [
+    {
+      "name": "desktop HQ",
+      "before": {
+        "source": "https://dodolalaowo.github.io/endfield-queue/assets/perlica-desktop-hq.mp4",
+        "frames": 6,
+        "time": 0.195802,
+        "firstFrameMs": 830,
+        "canvas": [
+          1440,
+          810
+        ],
+        "video": [
+          2880,
+          810
+        ],
+        "decoded": 9,
+        "dropped": 0,
+        "state": "playing"
+      },
+      "after": {
+        "source": "https://dodolalaowo.github.io/endfield-queue/assets/perlica-desktop-hq.mp4",
+        "frames": 70,
+        "time": 2.310475,
+        "firstFrameMs": 830,
+        "canvas": [
+          1440,
+          810
+        ],
+        "video": [
+          2880,
+          810
+        ],
+        "decoded": 73,
+        "dropped": 0,
+        "state": "playing"
+      }
+    },
+    {
+      "name": "mobile HQ",
+      "before": {
+        "source": "https://dodolalaowo.github.io/endfield-queue/assets/perlica-mobile-hq.mp4",
+        "frames": 2,
+        "time": 0.052389,
+        "firstFrameMs": 47,
+        "canvas": [
+          960,
+          540
+        ],
+        "video": [
+          1920,
+          540
+        ],
+        "decoded": 6,
+        "dropped": 0,
+        "state": "playing"
+      },
+      "after": {
+        "source": "https://dodolalaowo.github.io/endfield-queue/assets/perlica-mobile-hq.mp4",
+        "frames": 65,
+        "time": 2.162333,
+        "firstFrameMs": 47,
+        "canvas": [
+          960,
+          540
+        ],
+        "video": [
+          1920,
+          540
+        ],
+        "decoded": 69,
+        "dropped": 0,
+        "state": "playing"
+      }
+    },
+    {
+      "name": "HQ failure recovers with lightweight video",
+      "state": "playing",
+      "retries": "1",
+      "source": "https://dodolalaowo.github.io/endfield-queue/assets/perlica-mobile.mp4"
+    }
+  ]
+}
