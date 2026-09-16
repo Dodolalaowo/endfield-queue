@@ -1,0 +1,30 @@
+[
+  {
+    "name": "desktop-perlica",
+    "errors": [],
+    "overflow": false,
+    "images": true,
+    "height": 1080
+  },
+  {
+    "name": "desktop-amiya",
+    "errors": [],
+    "overflow": false,
+    "images": true,
+    "height": 1080
+  },
+  {
+    "name": "mobile-perlica",
+    "errors": [],
+    "overflow": false,
+    "images": true,
+    "height": 703
+  },
+  {
+    "name": "mobile-amiya",
+    "errors": [],
+    "overflow": false,
+    "images": true,
+    "height": 703
+  }
+]
