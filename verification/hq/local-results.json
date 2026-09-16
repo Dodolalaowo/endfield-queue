@@ -1,0 +1,87 @@
+{
+  "date": "2026-09-16T05:42:48.201Z",
+  "origin": "http://127.0.0.1:8090",
+  "engine": "Windows Edge, touch simulation; not physical mobile",
+  "results": [
+    {
+      "name": "desktop HQ",
+      "before": {
+        "source": "http://127.0.0.1:8090/assets/perlica-desktop-hq.mp4",
+        "frames": 2,
+        "time": 0.176123,
+        "firstFrameMs": 131,
+        "canvas": [
+          1440,
+          810
+        ],
+        "video": [
+          2880,
+          810
+        ],
+        "decoded": 11,
+        "dropped": 0,
+        "state": "playing"
+      },
+      "after": {
+        "source": "http://127.0.0.1:8090/assets/perlica-desktop-hq.mp4",
+        "frames": 65,
+        "time": 2.289938,
+        "firstFrameMs": 131,
+        "canvas": [
+          1440,
+          810
+        ],
+        "video": [
+          2880,
+          810
+        ],
+        "decoded": 73,
+        "dropped": 0,
+        "state": "playing"
+      }
+    },
+    {
+      "name": "mobile HQ",
+      "before": {
+        "source": "http://127.0.0.1:8090/assets/perlica-mobile-hq.mp4",
+        "frames": 7,
+        "time": 0.185468,
+        "firstFrameMs": 85,
+        "canvas": [
+          960,
+          540
+        ],
+        "video": [
+          1920,
+          540
+        ],
+        "decoded": 9,
+        "dropped": 0,
+        "state": "playing"
+      },
+      "after": {
+        "source": "http://127.0.0.1:8090/assets/perlica-mobile-hq.mp4",
+        "frames": 70,
+        "time": 2.289277,
+        "firstFrameMs": 85,
+        "canvas": [
+          960,
+          540
+        ],
+        "video": [
+          1920,
+          540
+        ],
+        "decoded": 73,
+        "dropped": 0,
+        "state": "playing"
+      }
+    },
+    {
+      "name": "HQ failure recovers with lightweight video",
+      "state": "playing",
+      "retries": "1",
+      "source": "http://127.0.0.1:8090/assets/perlica-mobile.mp4"
+    }
+  ]
+}

@@ -6,7 +6,7 @@ window.createQueueVideoPlayer = function (layer, options) {
  video.setAttribute('muted','');video.setAttribute('playsinline','');video.setAttribute('webkit-playsinline','');
  video.preload='auto';video.className='video-decoder';video.setAttribute('aria-hidden','true');video.tabIndex=-1;
  layer.append(video);
- let gl,program,texture,buffer,shaders=[],active=false,terminal=false,generation=0,raf=0,watch=0,retryTimer=0;
+ let gl,program,texture,buffer,shaders=[],active=false,terminal=false,recovering=false,pendingReload=false,generation=0,raf=0,watch=0,retryTimer=0;
  let attempts=0,count=0,lastMedia=-1,lastDraw=0,lastProgress=0,started=0,confirmed=0,source=options.src;
  const startupMs=options.startupMs||10000,stallMs=options.stallMs||4000;
  function state(name,reason=''){layer.dataset.videoState=name;layer.dataset.videoReason=reason;}
@@ -27,16 +27,16 @@ window.createQueueVideoPlayer = function (layer, options) {
   gl.viewport(0,0,canvas.width,canvas.height);
  }
  function failure(reason,recoverable=true){
-  if(!active||terminal)return;
-  halt();hide();state('poster',reason);
+  if(!active||terminal||recovering)return;
+  recovering=true;halt();hide();state('poster',reason);
   if(recoverable&&attempts<1){
-   attempts++;layer.dataset.retries=String(attempts);
-   retryTimer=setTimeout(()=>{if(!active)return;source=options.fallbackSrc||source;video.src=source;video.load();begin();},750);
+   attempts++;layer.dataset.retries=String(attempts);source=options.fallbackSrc||source;pendingReload=true;
+   retryTimer=setTimeout(()=>{if(!active)return;recovering=false;begin();},750);
   }else{terminal=true;active=false;state('fallback',reason);video.removeAttribute('src');video.load();}
  }
  function draw(now){
   if(!active||terminal)return;
-  if(video.readyState>=2&&Math.abs(video.currentTime-lastMedia)>.001&&now-lastDraw>=1000/24){
+  if(video.readyState>=2&&Math.abs(video.currentTime-lastMedia)>.001&&now-lastDraw>=1000/30-2){
    try{
     if(gl.isContextLost())throw Error('context-lost');
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,video);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
@@ -53,7 +53,7 @@ window.createQueueVideoPlayer = function (layer, options) {
  }
  function begin(){
   if(!active||terminal)return;
-  const token=++generation;confirmed=0;lastMedia=-1;lastDraw=0;started=lastProgress=performance.now();hide();state('loading');
+  const token=++generation;if(pendingReload){pendingReload=false;video.src=source;video.load();}confirmed=0;lastMedia=-1;lastDraw=0;started=lastProgress=performance.now();hide();state('loading');
   watch=setInterval(()=>{
    if(!active||terminal)return;
    const now=performance.now();
@@ -61,7 +61,7 @@ window.createQueueVideoPlayer = function (layer, options) {
    else if(confirmed>=2&&now-lastProgress>stallMs)failure('frame-stalled');
   },250);
   // Do not await play(): on some devices it can remain pending indefinitely.
-  try{const result=video.play();result?.catch(error=>{if(active&&token===generation)failure(error.name==='NotAllowedError'?'autoplay-rejected':'play-rejected',false);});}
+  try{const result=video.play();result?.catch(error=>{if(active&&token===generation)failure(error.name==='NotAllowedError'?'autoplay-rejected':'play-rejected',error.name!=='NotAllowedError');});}
   catch{failure('play-rejected',false);return;}
   raf=requestAnimationFrame(draw);
  }
@@ -70,7 +70,7 @@ window.createQueueVideoPlayer = function (layer, options) {
  canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();failure('context-lost',false);});
  return {
   start(){if(terminal||active)return;active=true;begin();},
-  stop(){active=false;halt();hide();if(!terminal)state('paused');},
+  stop(){active=false;recovering=false;halt();hide();if(!terminal)state('paused');},
   destroy(){active=false;terminal=true;halt();hide();video.removeAttribute('src');video.load();video.remove();if(gl&&!gl.isContextLost()){gl.deleteTexture(texture);gl.deleteBuffer(buffer);gl.deleteProgram(program);shaders.forEach(s=>gl.deleteShader(s));}},
  };
 };

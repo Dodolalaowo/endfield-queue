@@ -42,8 +42,8 @@
  function player(){
   if(!perlicaPlayer){
    const mobile=stage.classList.contains('mobile'),canvas=layers[0].querySelector('canvas');
-   canvas.width=mobile?640:960;canvas.height=mobile?360:540;
-   perlicaPlayer=createQueueVideoPlayer(layers[0],{src:config.assets.perlica[mobile?'mobile':'desktop'],fallbackSrc:config.assets.perlica.mobile});
+   canvas.width=mobile?960:1440;canvas.height=mobile?540:810;
+   perlicaPlayer=createQueueVideoPlayer(layers[0],{src:config.assets.perlica[mobile?'mobile':'desktop'],fallbackSrc:config.assets.perlica.fallback||config.assets.perlica.mobile});
   }return perlicaPlayer;
  }
  function ready(index){return [...layers[index].querySelectorAll('img'),...(index===1?[document.querySelector('.amiya-scene img')]:[])].every(img=>decodedImages.has(img));}
@@ -83,4 +83,3 @@
  addEventListener('pagehide',()=>{clearTimeout(timer);clearTimeout(fadeTimer);perlicaPlayer?.stop();});addEventListener('pageshow',resetMotion);
  resetMotion();
 })();
-

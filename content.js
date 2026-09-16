@@ -5,5 +5,5 @@ window.QUEUE_CONTENT={
  event:'明日方舟 × 終末地',headerNote:'現場叫號看板',title:'GRYPHLINE STORE',label:'目前開放至',
  dayLabel:'DAY',day:'1',number:'039',status:'正常叫號',updatedAt:'14:27',noticeTag:'入場提醒',
  noticeMain:'請於叫號前返回 GRYPHLINE STORE 等候',noticeSub:'實際叫號狀況以現場工作人員公告為準',
- assets:{perlica:{desktop:'assets/perlica-desktop.mp4',mobile:'assets/perlica-mobile.mp4'}}
+ assets:{perlica:{desktop:'assets/perlica-desktop-hq.mp4',mobile:'assets/perlica-mobile-hq.mp4',fallback:'assets/perlica-mobile.mp4'}}
 };
